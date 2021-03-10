@@ -11,7 +11,9 @@ import Prelude hiding (sequence, mapM)
 
 import Control.Applicative
 import Control.Lens
-import Control.Monad.Error hiding (sequence, mapM)
+import Control.Lens.Action
+-- import Control.Monad.Error hiding (sequence, mapM)
+import Control.Monad.Except hiding (sequence, mapM)
 import Control.Monad.Reader hiding (sequence, mapM)
 import Data.Monoid
 import qualified Data.Map as Map

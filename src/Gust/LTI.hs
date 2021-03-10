@@ -10,7 +10,9 @@ module Gust.LTI (principalSubstitution,
                  Subst.Substitution(..),
                  Subst.applySubstitution) where
 
-import Control.Monad.Error
+-- import Control.Monad.Error
+import Control.Monad.Except
+import Control.Monad.Trans.Except
 import Control.Monad.Reader
 import Data.Monoid
 import qualified Data.Set as Set
@@ -29,8 +31,8 @@ data TypeInferenceError =
   | FailTIE String
     deriving Show
 
-instance Error TypeInferenceError where
-  strMsg = FailTIE
+-- instance Error TypeInferenceError where
+--   strMsg = FailTIE
 
 -- | Construct the constraint map corresponding to the
 -- subtyping problem:  ⊢αs σs→τ ≤ Ss->T ⇒ C
@@ -55,12 +57,12 @@ makeProblemConstraints funTy args mRes = let
 
 solveConstraints ::
   MonadError TypeInferenceError m
-  => ReaderT ConstraintEnv (ErrorT ConstraintError U.LFreshM) ConstraintMap
+  => ReaderT ConstraintEnv (ExceptT ConstraintError U.LFreshM) ConstraintMap
   -> ConstraintEnv 
   -> (ConstraintMap -> Either Subst.SubstitutionError Subst.Substitution)
   -> m Subst.Substitution
 solveConstraints genCnstr env buildSubst =
-  case U.runLFreshM $ runErrorT $ runReaderT genCnstr env of
+  case U.runLFreshM $ runExceptT $ runReaderT genCnstr env of
     Left err -> throwError (ConstraintGenTIE err)
     Right constraint ->
       case buildSubst constraint of

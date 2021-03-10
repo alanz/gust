@@ -14,7 +14,7 @@ module Gust.AST where
 import Control.Lens
 import Data.Data (Data)
 import Data.Foldable (Foldable)
-import Data.Typeable (Typeable, Typeable1)
+import Data.Typeable
 import qualified Data.Typeable as T
 
 import Gust.Kind
@@ -29,11 +29,11 @@ data Meta f a =
 instance Show (f a) => Show (Meta f a) where
   showsPrec d (x :@: _) = showsPrec d x
 
-instance (Typeable1 f) => Typeable1 (Meta f) where
-  typeOf1 _ = T.mkTyConApp (T.mkTyCon3 "gust"
-                            "Gust.AST"
-                            "Meta")
-              [ T.typeOf1 (undefined :: f a) ]
+-- instance (Typeable f) => Typeable (Meta f) where
+--   typeOf1 _ = T.mkTyConApp (T.mkTyCon3 "gust"
+--                             "Gust.AST"
+--                             "Meta")
+--               [ T.typeOf1 (undefined :: f a) ]
 
 type Name = String
 

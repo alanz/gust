@@ -16,11 +16,13 @@ newtype ConstraintMap =
   ConstraintMap { unConstraintMap :: Map.Map TyName Constraint }
   deriving Show
 
-instance Monoid ConstraintMap where
-  mempty = ConstraintMap mempty
-  mappend c1 c2 =
+instance Semigroup ConstraintMap where
+   c1 <> c2 =
     ConstraintMap
     $ Map.unionWith (/\) (unConstraintMap c1) (unConstraintMap c2)
+  
+instance Monoid ConstraintMap where
+  mempty = ConstraintMap mempty
   mconcat cs = ConstraintMap $ Map.unionsWith (/\) $ map unConstraintMap cs
 
 boundedBelow :: TyName -> Type -> ConstraintMap

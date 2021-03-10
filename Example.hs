@@ -7,7 +7,8 @@ module Example where
 import Control.Applicative
 import Control.Lens
 import Control.Monad.Reader
-import Control.Monad.Error
+-- import Control.Monad.Error
+import Control.Monad.Except
 
 import Data.Monoid
 

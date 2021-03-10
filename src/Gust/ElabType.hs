@@ -5,13 +5,16 @@
   , TemplateHaskell
   , RankNTypes
   #-}
+{-# OPTIONS_GHC -ddump-splices -ddump-to-file -dsuppress-uniques #-}
 module Gust.ElabType where
 
 import Control.Applicative
 import Control.Monad
 import Control.Monad.Reader.Class
-import Control.Monad.Error.Class
+-- import Control.Monad.Error.Class
+import Control.Monad.Except
 import Control.Lens
+import Control.Lens.Iso
 
 import qualified Data.Map as Map
 
@@ -25,13 +28,19 @@ import Gust.Kind
 
 newtype TypeEnv = TypeEnv (Map.Map S.Name TyConBind)
 
-makeIso ''TypeEnv
+-- makeIso ''TypeEnv
+
+
+typeEnv :: Iso' (Map.Map S.Name TyConBind) TypeEnv
+typeEnv = (iso (\ x1 -> TypeEnv x1)) (\ (TypeEnv x1) -> x1)
+{-# INLINE typeEnv #-}
 
 class HasTyEnv e where
   tyEnv :: Lens' e TypeEnv
 
 instance HasTyEnv TypeEnv where
   tyEnv = id
+
 
 extendTypeEnv :: HasTyEnv e => [(S.Name, TyConBind)] -> e -> e
 extendTypeEnv xs = tyEnv . from typeEnv %~ Map.union (Map.fromList xs)

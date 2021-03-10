@@ -6,7 +6,8 @@ module Gust.LTI.Substitution where
 
 import Control.Applicative
 import Control.Lens
-import Control.Monad.Error
+-- import Control.Monad.Error
+import Control.Monad.Except
 
 import qualified Data.Map as Map
 
@@ -30,8 +31,8 @@ newtype SubstitutionError =
   SubstitutionError {substitutionErrorMsg :: String }
   deriving Show
 
-instance Error SubstitutionError where
-  strMsg = SubstitutionError
+-- instance Error SubstitutionError where
+--   strMsg = SubstitutionError
 
 -- | principalSubstitution R C = σ where σ maps each x with C(x)=(L,U) to
 -- either L or U depending on R's variance on x

@@ -7,7 +7,8 @@ module Gust.LTI.GenerateConstraints where
 
 import Control.Lens
 import Control.Monad.Reader
-import Control.Monad.Error
+-- import Control.Monad.Error
+import Control.Monad.Except
 
 import Data.Monoid
 import qualified Data.Set as Set
@@ -32,8 +33,8 @@ makeLenses ''ConstraintEnv
 newtype ConstraintError = ConstraintError {constraintErrorMsg :: String }
                           deriving (Eq, Show)
 
-instance Error ConstraintError where
-  strMsg = ConstraintError
+-- instance Error ConstraintError where
+--   strMsg = ConstraintError
 
 constraintErr :: MonadError ConstraintError m
                  => String
